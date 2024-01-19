@@ -18,11 +18,11 @@ The following are the requirements for using your data with this model:
 
 ### Covariates Support:
 
-Past :white_check_mark:
+Past :x:
 
 Future :x:
 
-Static :white_check_mark:
+Static :x:
 
 ---
 

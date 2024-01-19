@@ -143,7 +143,8 @@ class Forecaster:
         """
         self.data_schema = data_schema
         self.lags = lags
-        self.use_exogenous = use_exogenous
+        use_exogenous = False
+        self.use_exogenous = False
         self.random_state = random_state
         self._is_trained = False
         self.kwargs = kwargs
@@ -189,6 +190,7 @@ class Forecaster:
             PatchTST(
                 h=data_schema.forecast_length,
                 stat_exog_list=stat_exog_list,
+                hist_exog_list=hist_exog_list,
                 input_size=self.lags,
                 exclude_insample_y=exclude_insample_y,
                 encoder_layers=encoder_layers,
@@ -278,15 +280,15 @@ class Forecaster:
                 all_series[index] = series.iloc[-self.history_length :]
             data = pd.concat(all_series).drop(columns="index")
 
-        if self.data_schema.past_covariates:
-            data.drop(columns=self.data_schema.past_covariates, inplace=True)
-
         if not self.use_exogenous:
             if self.data_schema.future_covariates:
                 data.drop(columns=self.data_schema.future_covariates, inplace=True)
 
             if self.data_schema.static_covariates:
                 data.drop(columns=self.data_schema.static_covariates, inplace=True)
+
+            if self.data_schema.past_covariates:
+                data.drop(columns=self.data_schema.past_covariates, inplace=True)
 
         data.rename(
             columns={
